@@ -1,6 +1,7 @@
 <?php function mcrypt_rand_gen($min, $max) {
 
-	# Generate random numbers using MCRYPT initialization vectors. Function requires minimum value and maximum value.
+	# Generate cryptographically secure psuedorandom numbers using MCRYPT initialization vectors. 
+	# Function requires minimum value and maximum value.
 
 	$range = ($max - $min) + 1;
 	$mod = 2;
