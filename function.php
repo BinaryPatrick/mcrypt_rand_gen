@@ -19,7 +19,7 @@
 	$dec = base_convert($bin, 2, 10);
 	$dec += $min;
 	if ($dec > $max) {
-		$dec = genY($min, $max);
+		$dec = mcrypt_rand_gen($min, $max);
 	}
 	return $dec;
 } ?>
