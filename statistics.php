@@ -1,4 +1,4 @@
-<?php error_reporting(E_ALL); set_time_limit(500); $timein = time(); include('mcrypt_rand_gen.php');
+<?php error_reporting(E_ALL); set_time_limit(500); $timein = time(); include('function.php');
 function stdDev($array) {
 	$sumXi = 0; $sum = array_sum($array); $count = count($array); $average = $sum / $count;
 	foreach ($array as $key => $value) {
@@ -17,7 +17,7 @@ function mode($array) {
 	return array_search(max($values), $values);
 } // End Function
 
-$tall = 500; $long = 1015; $wide = 12; // Array test specifications
+$tall = 500; $long = 100000; $wide = 2; // Array test specifications
 for ($x = 0; $x < $tall; $x++) { // Build Triple Test Array
 	unset($testArr);
 	for ($i = 0; $i < $long; $i++) {
@@ -37,13 +37,16 @@ foreach ($mainArr as $key => $testArr) {
 	$average = array_sum($testArr) / count($testArr);
 	$mode[] = max($testArr); $modeKey[] = array_keys($testArr, $mode[$key])[0];
 	$min[] = min($testArr); $minKey[] = array_keys($testArr, $min[$key])[0];
+	$rangeArr[] = max($testArr) - min($testArr);
+
 }
 // derive Stats from each round
-$avstdDev = average($stdDev); 
+$avstdDev = average($stdDev);
 $avmode = mode($modeKey);
 $avmodeval = average($mode);
 $avmin = mode($minKey);
 $avminval = average($min);
+$avrange = average($rangeArr);
 ?>
 <html>
 	<head>
@@ -68,7 +71,7 @@ $avminval = average($min);
 			<div style="float: left; width: 50%;">
 				N: <?php echo count($mainArr); ?><br>
 				&mu;&#963;: <?php echo $avstdDev; ?><br>
-				&nbsp;&mu;: <?php echo $average; ?><br>
+				&mu; range: <?php echo $avrange; ?><br>
 				Mo: <?php echo sprintf("%03d",$avmode); ?> @ <?php echo $avmodeval; ?> or +<?php echo sprintf("%.2f%%", (($avmodeval - $average) / $avstdDev)); ?><br>
 				Lt: <?php echo sprintf("%03d",$avmin); ?> @ <?php echo $avminval; ?> or <?php echo sprintf("%.2f%%", (($avminval - $average) / $avstdDev)); ?>
 			</div>
@@ -78,11 +81,13 @@ $avminval = average($min);
 		<!-- individual results loop -->
 		<?php foreach ($mainArr as $id => $testArr) { ?>
 			<?php $stdDev = stdDev($testArr); $count = count($testArr); $sum = array_sum($testArr) ?>
-			<?php $average = array_sum($testArr) / $count; $max = max($testArr); ?>
-			<?php $maxKey = array_keys($testArr, $max)[0]; $min = min($testArr); ?>
-			<?php $minKey = array_keys($testArr, $min)[0]; $range = $max - $min; ?>
+			<?php $average = array_sum($testArr) / $count; ?>
+			<?php $max = max($testArr); $maxKey = array_keys($testArr, $max)[0]; ?>
+			<?php $min = min($testArr); $minKey = array_keys($testArr, $min)[0];  ?>
+			<?php $range = $max - $min; ?>
 			<div style="width: 18%; float: left; padding: 5px; border: 2px solid #000000; margin: 5px; border-radius: 5px;">
 				<table style="margin: 0; padding: 0;">
+					<tr><td>#:</td><td><?php echo ($id + 1) ?></td></tr>
 					<tr><td>N:</td><td><?php echo $long ?></td></tr>
 					<tr><td>&#963;:</td><td><?php echo $stdDev; ?></td></tr>
 					<tr><td>&mu;:</td><td><?php echo $average; ?></td>
